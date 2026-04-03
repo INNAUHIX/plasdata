@@ -90,18 +90,7 @@ export default function InquiryModal({
         {/* 内容区 */}
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* 左侧宣传图 */}
-          <div className="hidden h-full rounded-tl-2xl rounded-bl-2xl bg-gradient-to-br from-orange-400 to-orange-500 p-8 flex-col items-center justify-center md:flex">
-            <div className="text-center">
-              <div className="mb-6 text-6xl">🤖</div>
-              <h3 className="mb-2 text-2xl font-bold text-white">AI 选材助手</h3>
-              <p className="mb-6 text-white/90">智能驱动高效决策</p>
-              <p className="text-sm text-white/80">
-                精准分析，科学推荐，<br />
-                助力选材新升级
-              </p>
-              <div className="mt-8 text-white font-semibold">塑库网</div>
-            </div>
-          </div>
+          <div className="hidden h-full rounded-tl-2xl rounded-bl-2xl bg-gray-100 md:block"></div>
 
           {/* 右侧表单 */}
           <div className="relative h-full rounded-tr-2xl rounded-br-2xl bg-white p-8">
