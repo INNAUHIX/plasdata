@@ -71,6 +71,7 @@ function SideCard({ children }: { children: React.ReactNode }) {
 
 function TrendChart({ option }: { option: TrendOption }) {
   const [hoveredIndex, setHoveredIndex] = useState<number>(option.points.length - 1);
+  const [isHovered, setIsHovered] = useState(false);
 
   const geometry = useMemo(() => {
     const min = Math.min(...option.points.map((point) => point.value));
@@ -118,7 +119,11 @@ function TrendChart({ option }: { option: TrendOption }) {
           ))}
         </div>
 
-        <div className="absolute inset-0 z-10 flex">
+        <div
+          className="absolute inset-0 z-10 flex"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           {geometry.map((point, index) => (
             <button
               key={point.label}
@@ -132,29 +137,31 @@ function TrendChart({ option }: { option: TrendOption }) {
         </div>
       </div>
 
-      <div
-        className="pointer-events-none absolute -top-1 rounded-lg bg-[rgba(31,41,55,0.92)] px-3 py-2 text-[11px] text-white shadow-[0_18px_40px_rgba(0,0,0,0.2)]"
-        style={{
-          left: `calc(${((activePoint.x - axisLeft) / (axisRight - axisLeft || 1)) * 100}% + 38px)`,
-          transform: (() => {
-            // 计算提示框的位置，确保它不会超出卡片边界
-            const ratio = (activePoint.x - axisLeft) / (axisRight - axisLeft || 1);
-            if (ratio > 0.8) {
-              // 当靠近右侧时，调整transform使其向左移动更多
-              return "translateX(-80%)";
-            } else if (ratio > 0.6) {
-              // 当在右侧中间时，调整transform使其向左移动更多
-              return "translateX(-60%)";
-            }
-            return "translateX(-50%)";
-          })(),
-          maxWidth: "100%",
-          wordBreak: "keep-all"
-        }}
-      >
-        <div className="font-bold">{formatDateCN(activePoint.label)}</div>
-        <div>价格: {activePoint.value.toFixed(2)}</div>
-      </div>
+      {isHovered && (
+        <div
+          className="pointer-events-none absolute -top-1 rounded-lg bg-[rgba(31,41,55,0.92)] px-3 py-2 text-[11px] text-white shadow-[0_18px_40px_rgba(0,0,0,0.2)]"
+          style={{
+            left: `calc(${((activePoint.x - axisLeft) / (axisRight - axisLeft || 1)) * 100}% + 38px)`,
+            transform: (() => {
+              // 计算提示框的位置，确保它不会超出卡片边界
+              const ratio = (activePoint.x - axisLeft) / (axisRight - axisLeft || 1);
+              if (ratio > 0.8) {
+                // 当靠近右侧时，调整transform使其向左移动更多
+                return "translateX(-80%)";
+              } else if (ratio > 0.6) {
+                // 当在右侧中间时，调整transform使其向左移动更多
+                return "translateX(-60%)";
+              }
+              return "translateX(-50%)";
+            })(),
+            maxWidth: "100%",
+            wordBreak: "keep-all"
+          }}
+        >
+          <div className="font-bold">{formatDateCN(activePoint.label)}</div>
+          <div>价格: {activePoint.value.toFixed(2)}</div>
+        </div>
+      )}
     </div>
   );
 }
