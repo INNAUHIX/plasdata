@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import type { ReactNode } from "react";
+import InquiryModal from "./InquiryModal";
 
 function IconWrap({ children }: { children: ReactNode }) {
   return <span className="inline-flex h-[15px] w-[15px] items-center justify-center text-current">{children}</span>;
@@ -69,38 +71,60 @@ const ghostButton =
   "relative inline-flex items-center gap-2 rounded-panel border border-[#d8dee8] bg-[rgba(255,255,255,0.96)] px-7 py-[15px] text-[14px] font-semibold leading-none text-[#526071] shadow-[0_1px_2px_rgba(17,24,39,0.03)] transition duration-200 hover:-translate-y-px hover:border-[rgba(246,82,1,0.4)] hover:shadow-[0_4px_16px_rgba(246,82,1,0.12)]";
 
 export default function HeroBar() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <section className="relative overflow-hidden rounded-xl border border-[rgba(59,130,246,0.08)] bg-[linear-gradient(135deg,rgba(246,82,1,0.07),rgba(255,255,255,0.94)_38%,rgba(245,248,255,0.92))] px-8 pb-6 pt-8 shadow-card">
-      <div className="pointer-events-none absolute -right-5 -top-10 h-[210px] w-[210px] rounded-full bg-[radial-gradient(circle,rgba(246,82,1,0.12),transparent_68%)]" />
-      <div className="relative z-10">
-        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="text-[24px] font-extrabold leading-[1.35] text-txt-strong">塞拉尼斯/Celanex@2004-2T PBT</div>
-          <div className="flex flex-wrap gap-[18px] text-[14px] text-slate-500">
-            {miniActions.map((item) => (
-              <span key={item.label} className="inline-flex items-center gap-[8px]">
-                <ActionIcon kind={item.icon} />
-                {item.label}
-              </span>
-            ))}
+    <>
+      <section className="relative overflow-hidden rounded-xl border border-[rgba(59,130,246,0.08)] bg-[linear-gradient(135deg,rgba(246,82,1,0.07),rgba(255,255,255,0.94)_38%,rgba(245,248,255,0.92))] px-8 pb-6 pt-8 shadow-card">
+        <div className="pointer-events-none absolute -right-5 -top-10 h-[210px] w-[210px] rounded-full bg-[radial-gradient(circle,rgba(246,82,1,0.12),transparent_68%)]" />
+        <div className="relative z-10">
+          <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="text-[24px] font-extrabold leading-[1.35] text-txt-strong">塞拉尼斯/Celanex@2004-2T PBT</div>
+            <div className="flex flex-wrap gap-[18px] text-[14px] text-slate-500">
+              {miniActions.map((item) => (
+                <span key={item.label} className="inline-flex items-center gap-[8px]">
+                  <ActionIcon kind={item.icon} />
+                  {item.label}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-wrap gap-4">
+              <button 
+                onClick={handleOpenModal}
+                className="inline-flex items-center gap-3 rounded-panel border border-[#ff6c1a] bg-[linear-gradient(180deg,#ff7a25_0%,#ff640f_100%)] px-7 py-[15px] text-[16px] font-bold leading-none text-white shadow-[0_12px_28px_rgba(255,106,26,0.34)] transition duration-200 hover:-translate-y-px hover:shadow-[0_14px_30px_rgba(255,106,26,0.38)]"
+              >
+                <ActionIcon kind="cart" />
+                询价采购
+              </button>
+              <button className={ghostButton}>
+                <ActionIcon kind="download" />
+                下载资料
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <button className={ghostButton}>发布需求/供应</button>
+              <button className={ghostButton}>查看供应（1）</button>
+            </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap gap-4">
-            <button className="inline-flex items-center gap-3 rounded-panel border border-[#ff6c1a] bg-[linear-gradient(180deg,#ff7a25_0%,#ff640f_100%)] px-7 py-[15px] text-[16px] font-bold leading-none text-white shadow-[0_12px_28px_rgba(255,106,26,0.34)] transition duration-200 hover:-translate-y-px hover:shadow-[0_14px_30px_rgba(255,106,26,0.38)]">
-              <ActionIcon kind="cart" />
-              询价采购
-            </button>
-            <button className={ghostButton}>
-              <ActionIcon kind="download" />
-              下载资料
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-4">
-            <button className={ghostButton}>发布需求/供应</button>
-            <button className={ghostButton}>查看供应（1）</button>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+
+      <InquiryModal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal}
+        materialName="塞拉尼斯/Celanex@2004-2T PBT"
+        materialPrice="2735"
+      />
+    </>
   );
 }
