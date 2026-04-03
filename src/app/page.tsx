@@ -12,7 +12,13 @@ import ChemicalTable, { ChemicalRow } from "@/components/ChemicalTable";
 
 const PANEL_WIDTH = 420;
 const paramTabs = ["性能参数", "加工参数", "黄卡参数"];
-const certs = ["E207780", "RoHS", "ISO 9001", "REACH", "ISO 14001"];
+const certs = [
+  { name: "E207780", icon: "/cert-icons/image@2x.png" },
+  { name: "RoHS", icon: "/cert-icons/image@2x-2.png" },
+  { name: "ISO 9001", icon: "/cert-icons/image@2x-3.png" },
+  { name: "REACH", icon: "/cert-icons/image@2x-4.png" },
+  { name: "ISO 14001", icon: "/cert-icons/image@2x-5.png" }
+];
 
 const physicalRows = [
   ["密度", "-", "1.18 g/cm3", "ASTM D792"],
@@ -286,11 +292,12 @@ export default function Page() {
                   <h3 className="text-[18px] font-bold text-[#202938]">认证证书</h3>
                   <span className="text-[14px] text-[#98a2b3]">查询更多</span>
                 </div>
-                <div className="flex flex-wrap gap-3">
-                  {certs.map((item) => (
-                    <span key={item} className="rounded-full border border-[#dde5ef] bg-white px-4 py-2 text-[13px] text-[#5f6b7c] shadow-[0_6px_18px_rgba(31,41,55,0.04)]">
-                      {item}
-                    </span>
+                <div className="flex flex-wrap gap-4">
+                  {certs.map((cert) => (
+                    <div key={cert.name} className="flex items-center gap-2 rounded-full border border-[#dde5ef] bg-white px-3 py-1.5 text-[13px] text-[#5f6b7c] shadow-[0_6px_18px_rgba(31,41,55,0.04)]">
+                      <img src={cert.icon} alt={cert.name} className="h-5 w-5" />
+                      {cert.name}
+                    </div>
                   ))}
                 </div>
               </SectionCard>
