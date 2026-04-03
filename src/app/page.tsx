@@ -307,7 +307,6 @@ export default function Page() {
               <SectionCard className="rounded-lg border-[#e5ebf3]">
                 <div className="mb-4 flex items-center justify-between">
                   <h3 className="text-[18px] font-bold text-[#202938]">物性参数</h3>
-                  <span className="text-[13px] text-[#98a2b3]">⌁ 物性表</span>
                 </div>
                 <div className="mb-5 flex flex-wrap gap-2">
                   {paramTabs.map((tab) => {
