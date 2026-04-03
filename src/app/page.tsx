@@ -1,8 +1,4 @@
-﻿<<<<<<< HEAD
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿"use client";
-=======
-﻿﻿﻿﻿﻿﻿﻿﻿﻿"use client";
->>>>>>> a4b25b31fb0e40314368586848d626618fa1df30
+﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import DesignDocPanel from "@/components/DesignDocPanel";
