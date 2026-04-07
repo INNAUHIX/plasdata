@@ -1,4 +1,4 @@
-﻿﻿﻿"use client";
+﻿﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import DesignDocPanel from "@/components/DesignDocPanel";
@@ -11,7 +11,7 @@ import DataTable from "@/components/DataTable";
 import ChemicalTable, { ChemicalRow } from "@/components/ChemicalTable";
 
 const PANEL_WIDTH = 420;
-const paramTabs = ["性能参数", "加工参数", "黄卡参数"];
+const paramTabs = ["性能参数", "加工参数", "黄卡参数", "耐化参数"];
 const certs = [
   { name: "E207780", icon: "/cert-icons/image@2x.png" },
   { name: "RoHS", icon: "/cert-icons/image@2x-2.png" },
@@ -137,12 +137,6 @@ const chartCards = [
   "VeradelRPESU的机械性能"
 ];
 
-const chemicalLegend = [
-  { grade: "E", label: "EXCELLENT 优", chip: "bg-[#fff2ea] text-[#f65201]" },
-  { grade: "G", label: "GOOD 好", chip: "bg-[#edf4ff] text-[#2f6bdb]" },
-  { grade: "P", label: "POOR 弱", chip: "bg-[#edf5ff] text-[#4b7cff]" },
-  { grade: "F", label: "FAIL 差", chip: "bg-[#f3f4f6] text-[#7b8798]" }
-] as const;
 
 export default function Page() {
   const [panelOpen, setPanelOpen] = useState(false);
@@ -156,7 +150,7 @@ export default function Page() {
   const materialRef = useRef<HTMLElement | null>(null);
   const certRef = useRef<HTMLElement | null>(null);
   const propertyRef = useRef<HTMLElement | null>(null);
-  const chemicalRef = useRef<HTMLElement | null>(null);
+
   const replaceRef = useRef<HTMLElement | null>(null);
   const chartsRef = useRef<HTMLElement | null>(null);
   const materialsRef = useRef<HTMLElement | null>(null);
@@ -167,7 +161,7 @@ export default function Page() {
     material: materialRef,
     cert: certRef,
     property: propertyRef,
-    chemical: chemicalRef,
+
     replace: replaceRef,
     charts: chartsRef,
     materials: materialsRef
@@ -216,6 +210,9 @@ export default function Page() {
   }, [chemicalCategory, chemicalGrade, chemicalQuery]);
 
   const activeParamTables = useMemo(() => {
+    if (activeParamTab === "耐化参数") {
+      return [];
+    }
     if (activeParamTab === "加工参数") {
       return [{
         headers: ["加工类型", "数值", "单位", "数据来源"],
@@ -328,83 +325,61 @@ export default function Page() {
                   })}
                 </div>
                 
-                {activeParamTables.map((table, index) => (
-                  <div key={index} className="mb-6">
-                    <DataTable headers={table.headers} rows={table.rows} />
-                  </div>
-                ))}
-              </SectionCard>
-            </section>
+                {activeParamTab === "耐化参数" ? (
+                  <>
+                    <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.95fr_0.95fr]">
+                      <label className="flex items-center gap-4 text-[14px] text-[#273140]">
+                        <span className="shrink-0">搜索参数名称</span>
+                        <input
+                          value={chemicalQuery}
+                          onChange={(event) => setChemicalQuery(event.target.value)}
+                          placeholder="请输入参数名称"
+                          className="h-[40px] w-full rounded-[8px] border border-[#dbe3ef] bg-[#f9fbfe] px-4 text-[14px] text-[#344256] outline-none transition focus:border-[#f65201] focus:bg-white"
+                        />
+                      </label>
 
-            <section ref={chemicalRef} id="chemical">
-              <SectionCard className="rounded-lg border-[#e5ebf3]">
-                <div className="mb-6 flex items-center justify-between">
-                  <h3 className="text-[18px] font-bold text-[#202938]">耐化参数</h3>
-                </div>
+                      <label className="flex items-center gap-4 text-[14px] text-[#273140]">
+                        <span className="shrink-0">参数分类</span>
+                        <select
+                          value={chemicalCategory}
+                          onChange={(event) => setChemicalCategory(event.target.value)}
+                          className="h-[40px] w-full rounded-[8px] border border-[#dbe3ef] bg-[#f9fbfe] px-4 text-[14px] text-[#344256] outline-none transition focus:border-[#f65201] focus:bg-white"
+                        >
+                          {["全部", "醇", "盐", "芳烃", "酸", "碱", "燃油", "润滑油"].map((item) => (
+                            <option key={item} value={item}>
+                              {item}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
 
-                <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.95fr_0.95fr]">
-                  <label className="flex items-center gap-4 text-[14px] text-[#273140]">
-                    <span className="shrink-0">搜索参数名称</span>
-                    <input
-                      value={chemicalQuery}
-                      onChange={(event) => setChemicalQuery(event.target.value)}
-                      placeholder="请输入参数名称"
-                      className="h-[40px] w-full rounded-[8px] border border-[#dbe3ef] bg-[#f9fbfe] px-4 text-[14px] text-[#344256] outline-none transition focus:border-[#f65201] focus:bg-white"
-                    />
-                  </label>
+                      <label className="flex items-center gap-4 text-[14px] text-[#273140]">
+                        <span className="shrink-0">测试评级</span>
+                        <select
+                          value={chemicalGrade}
+                          onChange={(event) => setChemicalGrade(event.target.value)}
+                          className="h-[40px] w-full rounded-[8px] border border-[#dbe3ef] bg-[#f9fbfe] px-4 text-[14px] text-[#344256] outline-none transition focus:border-[#f65201] focus:bg-white"
+                        >
+                          {[{ value: "全部", label: "全部" }, { value: "E", label: "优" }, { value: "G", label: "好" }, { value: "P", label: "弱" }, { value: "F", label: "差" }].map((item) => (
+                            <option key={item.value} value={item.value}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
 
-                  <label className="flex items-center gap-4 text-[14px] text-[#273140]">
-                    <span className="shrink-0">参数分类</span>
-                    <select
-                      value={chemicalCategory}
-                      onChange={(event) => setChemicalCategory(event.target.value)}
-                      className="h-[40px] w-full rounded-[8px] border border-[#dbe3ef] bg-[#f9fbfe] px-4 text-[14px] text-[#344256] outline-none transition focus:border-[#f65201] focus:bg-white"
-                    >
-                      {["全部", "醇", "盐", "芳烃", "酸", "碱", "燃油", "润滑油"].map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className="flex items-center gap-4 text-[14px] text-[#273140]">
-                    <span className="shrink-0">测试评级</span>
-                    <select
-                      value={chemicalGrade}
-                      onChange={(event) => setChemicalGrade(event.target.value)}
-                      className="h-[40px] w-full rounded-[8px] border border-[#dbe3ef] bg-[#f9fbfe] px-4 text-[14px] text-[#344256] outline-none transition focus:border-[#f65201] focus:bg-white"
-                    >
-                      {["全部", "E", "G", "P", "F"].map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
-
-                <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-                  <div className="inline-flex items-center gap-3 text-[14px] text-[#7b8798]">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#fff2ea] text-[16px] font-bold text-[#f65201]">!</span>
-                    以下数据来源于塑库网推测
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-5 text-[13px] text-[#8090a5]">
-                    {chemicalLegend.map((item) => (
-                      <span key={item.grade} className="inline-flex items-center gap-2">
-                        <span className={`inline-flex h-8 min-w-8 items-center justify-center rounded-[6px] px-2 font-bold ${item.chip}`}>
-                          {item.grade}
-                        </span>
-                        {item.label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-5">
-                  <ChemicalTable rows={filteredChemicalRows} />
-                </div>
+                    <div className="mt-5">
+                      <ChemicalTable rows={filteredChemicalRows} />
+                    </div>
+                  </>
+                ) : (
+                  activeParamTables.map((table, index) => (
+                    <div key={index} className="mb-6">
+                      <DataTable headers={table.headers} rows={table.rows} titleNote="未注明数据均源自原版" />
+                    </div>
+                  ))
+                )}
               </SectionCard>
             </section>
 
