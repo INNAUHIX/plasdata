@@ -9,15 +9,44 @@ import TopTabs, { TabKey } from "@/components/TopTabs";
 import InfoGrid from "@/components/InfoGrid";
 import DataTable from "@/components/DataTable";
 import ChemicalTable, { ChemicalRow } from "@/components/ChemicalTable";
+import CertificateDownloadModal from "@/components/CertificateDownloadModal";
 
-const PANEL_WIDTH = 420;
+const PANEL_WIDTH = 520;
 const paramTabs = ["性能参数", "加工参数", "黄卡参数", "耐化参数"];
 const certs = [
-  { name: "E207780", icon: "/cert-icons/image@2x.png" },
-  { name: "RoHS", icon: "/cert-icons/image@2x-2.png" },
-  { name: "ISO 9001", icon: "/cert-icons/image@2x-3.png" },
-  { name: "REACH", icon: "/cert-icons/image@2x-4.png" },
-  { name: "ISO 14001", icon: "/cert-icons/image@2x-5.png" }
+  {
+    name: "E207780",
+    icon: "/cert-icons/image@2x.png",
+    accessType: "service" as const,
+    previewContent: ["证书编号：E207780", "发证机构：UL", "状态：需联系客服获取完整文件"]
+  },
+  {
+    name: "RoHS",
+    icon: "/cert-icons/image@2x-2.png",
+    accessType: "member" as const,
+    revisionDate: "2026-02-04",
+    previewContent: ["证书类型：RoHS", "适用材料：Celanex@2004-2T PBT", "有害物质检测：通过"]
+  },
+  {
+    name: "ISO 9001",
+    icon: "/cert-icons/image@2x-3.png",
+    accessType: "member" as const,
+    revisionDate: "2026-02-04",
+    previewContent: ["证书类型：ISO 9001", "管理体系：质量管理体系", "发证机构：SGS"]
+  },
+  {
+    name: "REACH",
+    icon: "/cert-icons/image@2x-4.png",
+    accessType: "service" as const,
+    previewContent: ["证书类型：REACH", "合规声明：满足 REACH 相关要求", "状态：需联系客服获取完整文件"]
+  },
+  {
+    name: "ISO 14001",
+    icon: "/cert-icons/image@2x-5.png",
+    accessType: "member" as const,
+    revisionDate: "2025-11-20",
+    previewContent: ["证书类型：ISO 14001", "管理体系：环境管理体系", "发证机构：TUV"]
+  }
 ];
 
 const physicalRows = [
@@ -139,7 +168,11 @@ const chartCards = [
 
 
 export default function Page() {
+  const isMember = false;
   const [panelOpen, setPanelOpen] = useState(false);
+  const [certModalOpen, setCertModalOpen] = useState(false);
+  const [activeCert, setActiveCert] = useState<(typeof certs)[number] | null>(null);
+  const [favoriteCerts, setFavoriteCerts] = useState<string[]>([]);
   const [activeParamTab, setActiveParamTab] = useState(paramTabs[0]);
   const [chemicalQuery, setChemicalQuery] = useState("");
   const [chemicalCategory, setChemicalCategory] = useState("全部");
@@ -260,6 +293,21 @@ export default function Page() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleCertClick = (cert: (typeof certs)[number]) => {
+    setActiveCert(cert);
+    setCertModalOpen(true);
+  };
+
+  const certModalIsMember = isMember || activeCert?.name === "ISO 9001";
+  const certIsFavorite = activeCert ? favoriteCerts.includes(activeCert.name) : false;
+
+  const toggleFavoriteCert = () => {
+    if (!activeCert) return;
+    setFavoriteCerts((prev) =>
+      prev.includes(activeCert.name) ? prev.filter((item) => item !== activeCert.name) : [...prev, activeCert.name]
+    );
+  };
+
   return (
     <>
       <div className="mx-auto w-full max-w-7xl transition-all duration-300" style={shellStyle}>
@@ -291,10 +339,15 @@ export default function Page() {
                 </div>
                 <div className="flex flex-wrap gap-4">
                   {certs.map((cert) => (
-                    <div key={cert.name} className="flex items-center gap-2 rounded-full border border-[#dde5ef] bg-white px-3 py-1.5 text-[13px] text-[#5f6b7c] shadow-[0_6px_18px_rgba(31,41,55,0.04)]">
+                    <button
+                      key={cert.name}
+                      type="button"
+                      onClick={() => handleCertClick(cert)}
+                      className="flex items-center gap-2 rounded-full border border-[#dde5ef] bg-white px-3 py-1.5 text-[13px] text-[#5f6b7c] shadow-[0_6px_18px_rgba(31,41,55,0.04)] transition hover:border-[#f6b089] hover:text-[#c2410c]"
+                    >
                       <img src={cert.icon} alt={cert.name} className="h-5 w-5" />
                       {cert.name}
-                    </div>
+                    </button>
                   ))}
                 </div>
               </SectionCard>
@@ -457,6 +510,19 @@ export default function Page() {
       </div>
 
       <DesignDocPanel open={panelOpen} onOpenChange={setPanelOpen} width={PANEL_WIDTH} />
+
+      <CertificateDownloadModal
+        open={certModalOpen}
+        certName={activeCert?.name ?? ""}
+        certCode={activeCert?.name}
+        accessType={activeCert?.accessType ?? "member"}
+        isMember={certModalIsMember}
+        revisionDate={activeCert?.revisionDate}
+        previewContent={activeCert?.previewContent ?? []}
+        isFavorite={certIsFavorite}
+        onToggleFavorite={toggleFavoriteCert}
+        onClose={() => setCertModalOpen(false)}
+      />
 
       {showBackToTop && (
         <button

@@ -71,5 +71,52 @@ export const designDocs: DesignDoc[] = [
 - “未注明数据均源自原版”仅出现在性能参数/加工参数/黄卡参数表头
 - 所有提示文案均为橙色文字且无边框
 - 原截图中的整段提示区域已删除`
+  },
+  {
+    id: "material-detail-tracking",
+    title: "埋点设计说明",
+    date: "2026-04-07",
+    content: `# 材料详情页埋点设计说明
+
+## 1. 埋点目标
+- 评估详情页信息架构调整后的使用效率
+- 追踪关键转化行为（询价、下载、对比、收藏）
+- 识别参数模块（尤其耐化参数）的真实使用深度
+
+## 2. 事件列表
+| 事件名 | 触发时机 | 关键字段 |
+|------|------|------|
+| page_view_material_detail | 用户进入材料详情页 | material_id, material_name, source_page |
+| nav_click | 点击顶部导航标签 | tab_key, tab_name, material_id |
+| param_tab_switch | 切换物性参数子标签 | tab_name, material_id |
+| chemical_filter_change | 修改耐化筛选条件 | query, category, grade, material_id |
+| chemical_filter_result | 耐化筛选结果返回后 | result_count, category, grade, material_id |
+| action_click | 点击关键操作按钮 | action_type, material_id, position |
+
+## 3. 字段定义规范
+- \`material_id\`: 材料唯一标识，必填
+- \`source_page\`: 来源页面（search/list/recommend/direct），必填
+- \`tab_key\`: 导航英文键（material/cert/property/replace/charts/materials）
+- \`tab_name\`: 页面展示中文名
+- \`action_type\`: quote/download/compare/favorite
+- \`position\`: 操作按钮所在区块（header/right_rail/replace_table）
+
+## 4. 触发与去重规则
+- \`page_view_material_detail\` 每次进入页面仅触发一次
+- \`nav_click\` 用户主动点击才触发，滚动联动高亮不触发
+- \`param_tab_switch\` 仅在标签值变化时触发
+- \`chemical_filter_change\` 用户输入或下拉变化即触发
+- 同一参数连续输入建议 500ms 防抖上报
+
+## 5. 口径约定
+- “详情页关键操作点击率” = action_click / page_view_material_detail
+- “参数模块交互率” = （至少触发一次 param_tab_switch 或 chemical_filter_change 的用户）/ page_view_material_detail
+- “耐化筛选使用率” = chemical_filter_change / page_view_material_detail
+
+## 6. 验收清单
+- 所有事件均包含 \`material_id\`
+- 埋点字段命名统一 snake_case
+- 埋点在生产环境可被日志平台正确接收
+- 与需求文档中的功能点一一对应，无遗漏`
   }
 ];
