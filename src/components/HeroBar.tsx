@@ -63,9 +63,9 @@ function ActionIcon({ kind }: { kind: "star" | "compare" | "mini" | "cart" | "do
 
 const miniActions = [
   { label: "收藏材料", icon: "star" as const },
-  { label: "加入对比", icon: "compare" as const },
-  { label: "小程序查看", icon: "mini" as const }
+  { label: "加入对比", icon: "compare" as const }
 ];
+
 
 const ghostButton =
   "relative inline-flex items-center gap-2 rounded-panel border border-[#d8dee8] bg-[rgba(255,255,255,0.96)] px-7 py-[15px] text-[14px] font-semibold leading-none text-[#526071] shadow-[0_1px_2px_rgba(17,24,39,0.03)] transition duration-200 hover:-translate-y-px hover:border-[rgba(246,82,1,0.4)] hover:shadow-[0_4px_16px_rgba(246,82,1,0.12)]";

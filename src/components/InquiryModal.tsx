@@ -86,14 +86,11 @@ export default function InquiryModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="relative w-full max-w-[900px] overflow-hidden rounded-2xl shadow-2xl">
+      <div className="relative w-full min-w-[400px] max-w-[500px] overflow-hidden rounded-2xl shadow-2xl">
         {/* 内容区 */}
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* 左侧宣传图 */}
-          <div className="hidden h-full rounded-tl-2xl rounded-bl-2xl bg-gray-100 md:block"></div>
-
+        <div className="grid grid-cols-1">
           {/* 右侧表单 */}
-          <div className="relative h-full rounded-tr-2xl rounded-br-2xl bg-white p-8">
+          <div className="relative h-full rounded-2xl bg-white p-4">
             {/* 关闭按钮 */}
             <button
               onClick={onClose}
@@ -116,130 +113,123 @@ export default function InquiryModal({
             </button>
             
             {/* 标题 */}
-            <div className="mb-6 pt-2">
-              <h2 className="text-lg font-bold text-gray-800">询价采购</h2>
+            <div className="mb-6 pt-0">
+              <h2 className="text-lg font-bold text-gray-800" style={{margin: 0, padding: 0}}>询价采购</h2>
               <p className="text-sm text-gray-500">请填写以下信息，我们将尽快与您联系</p>
             </div>
 
 
 
             {/* 表单 */}
-            <div className="space-y-3">
-              {/* 材料型号 */}
-              <div className="flex items-start gap-2" style={{minHeight: '70px'}}>
-                <label className="w-24 pt-3 text-sm font-medium text-gray-700">
-                  材料型号
-                </label>
-                <div className="flex-1">
-                  <input
-                    type="text"
-                    value={formData.materialModel || ""}
-                    onChange={(e) => handleInputChange("materialModel", e.target.value)}
-                    placeholder="请输入型号"
-                    className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-100 ${
-                      errors.materialModel
-                        ? "border-red-300 focus:border-red-400 focus:ring-red-100"
-                        : "border-gray-200"
-                    }`}
-                  />
-                  <div className="h-4">
-                    {errors.materialModel && (
-                      <p className="mt-1 text-xs text-red-500">{errors.materialModel}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
+        <div className="space-y-[15px]">
+          {/* 材料型号 */}
+          <div className="flex items-start gap-2">
+            <label className="w-24 pt-3 text-sm font-medium text-gray-700">
+              材料型号
+            </label>
+            <div className="flex-1">
+              <input
+                type="text"
+                value={formData.materialModel || ""}
+                onChange={(e) => handleInputChange("materialModel", e.target.value)}
+                placeholder="请输入型号"
+                className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-100 ${
+                  errors.materialModel
+                    ? "border-red-300 focus:border-red-400 focus:ring-red-100"
+                    : "border-gray-200"
+                }`}
+              />
+              {errors.materialModel && (
+                <p className="mt-1 text-xs text-red-500">{errors.materialModel}</p>
+              )}
+            </div>
+          </div>
 
-              {/* 选择服务 */}
-              <div className="flex items-start gap-2" style={{minHeight: '60px'}}>
-                <label className="w-24 pt-3 text-sm font-medium text-gray-700">
-                  选择服务
-                </label>
-                <div className="flex-1">
-                  <div className="flex gap-4">
-                    <label
-                      className={`flex cursor-pointer items-center justify-center rounded-lg py-2.5 px-8 text-sm font-medium transition ${formData.serviceType === "inquiry" ? "border-2 border-orange-500 bg-orange-50 text-orange-500" : "border border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:bg-orange-50"}`}
-                      onClick={() => handleInputChange("serviceType", "inquiry")}
-                    >
-                      <input
-                        type="radio"
-                        name="serviceType"
-                        value="inquiry"
-                        checked={formData.serviceType === "inquiry"}
-                        onChange={() => handleInputChange("serviceType", "inquiry")}
-                        className="sr-only"
-                      />
-                      前期询价
-                    </label>
-                    <label
-                      className={`flex cursor-pointer items-center justify-center rounded-lg py-2.5 px-8 text-sm font-medium transition ${formData.serviceType === "urgent" ? "border-2 border-orange-500 bg-orange-50 text-orange-500" : "border border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:bg-orange-50"}`}
-                      onClick={() => handleInputChange("serviceType", "urgent")}
-                    >
-                      <input
-                        type="radio"
-                        name="serviceType"
-                        value="urgent"
-                        checked={formData.serviceType === "urgent"}
-                        onChange={() => handleInputChange("serviceType", "urgent")}
-                        className="sr-only"
-                      />
-                      紧急采购
-                    </label>
-                  </div>
-                  <div className="h-4"></div>
-                </div>
-              </div>
-
-              {/* 联系人 */}
-              <div className="flex items-start gap-2" style={{minHeight: '70px'}}>
-                <label className="w-24 pt-3 text-sm font-medium text-gray-700">
-                  联系人
-                </label>
-                <div className="flex-1">
+          {/* 选择服务 */}
+          <div className="flex items-start gap-2">
+            <label className="w-24 pt-3 text-sm font-medium text-gray-700">
+              选择服务
+            </label>
+            <div className="flex-1">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <label
+                  className={`flex cursor-pointer flex-1 items-center justify-center rounded-lg py-2.5 px-4 text-sm font-medium transition ${formData.serviceType === "inquiry" ? "border-2 border-orange-500 bg-orange-50 text-orange-500" : "border border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:bg-orange-50"}`}
+                  onClick={() => handleInputChange("serviceType", "inquiry")}
+                >
                   <input
-                    type="text"
-                    value={formData.contactName}
-                    onChange={(e) => handleInputChange("contactName", e.target.value)}
-                    placeholder="请输入您的名字"
-                    className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-100 ${
-                      errors.contactName
-                        ? "border-red-300 focus:border-red-400 focus:ring-red-100"
-                        : "border-gray-200"
-                    }`}
+                    type="radio"
+                    name="serviceType"
+                    value="inquiry"
+                    checked={formData.serviceType === "inquiry"}
+                    onChange={() => handleInputChange("serviceType", "inquiry")}
+                    className="sr-only"
                   />
-                  <div className="h-4">
-                    {errors.contactName && (
-                      <p className="mt-1 text-xs text-red-500">{errors.contactName}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* 联系电话 */}
-              <div className="flex items-start gap-2" style={{minHeight: '70px'}}>
-                <label className="w-24 pt-3 text-sm font-medium text-gray-700">
-                  联系电话
+                  前期询价
                 </label>
-                <div className="flex-1">
+                <label
+                  className={`flex cursor-pointer flex-1 items-center justify-center rounded-lg py-2.5 px-4 text-sm font-medium transition ${formData.serviceType === "urgent" ? "border-2 border-orange-500 bg-orange-50 text-orange-500" : "border border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:bg-orange-50"}`}
+                  onClick={() => handleInputChange("serviceType", "urgent")}
+                >
                   <input
-                    type="tel"
-                    value={formData.contactPhone}
-                    onChange={(e) => handleInputChange("contactPhone", e.target.value)}
-                    placeholder="请输入您的手机号"
-                    maxLength={11}
-                    className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-100 ${
-                      errors.contactPhone
-                        ? "border-red-300 focus:border-red-400 focus:ring-red-100"
-                        : "border-gray-200"
-                    }`}
+                    type="radio"
+                    name="serviceType"
+                    value="urgent"
+                    checked={formData.serviceType === "urgent"}
+                    onChange={() => handleInputChange("serviceType", "urgent")}
+                    className="sr-only"
                   />
-                  <div className="h-4">
-                    {errors.contactPhone && (
-                      <p className="mt-1 text-xs text-red-500">{errors.contactPhone}</p>
-                    )}
-                  </div>
-                </div>
+                  紧急采购
+                </label>
               </div>
+            </div>
+          </div>
+
+          {/* 联系人 */}
+          <div className="flex items-start gap-2">
+            <label className="w-24 pt-3 text-sm font-medium text-gray-700">
+              联系人
+            </label>
+            <div className="flex-1">
+              <input
+                type="text"
+                value={formData.contactName}
+                onChange={(e) => handleInputChange("contactName", e.target.value)}
+                placeholder="请输入您的名字"
+                className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-100 ${
+                  errors.contactName
+                    ? "border-red-300 focus:border-red-400 focus:ring-red-100"
+                    : "border-gray-200"
+                }`}
+              />
+              {errors.contactName && (
+                <p className="mt-1 text-xs text-red-500">{errors.contactName}</p>
+              )}
+            </div>
+          </div>
+
+          {/* 联系电话 */}
+          <div className="flex items-start gap-2">
+            <label className="w-24 pt-3 text-sm font-medium text-gray-700">
+              联系电话
+            </label>
+            <div className="flex-1">
+              <input
+                type="tel"
+                value={formData.contactPhone}
+                onChange={(e) => handleInputChange("contactPhone", e.target.value)}
+                placeholder="请输入您的手机号"
+                maxLength={11}
+                className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-100 ${
+                  errors.contactPhone
+                    ? "border-red-300 focus:border-red-400 focus:ring-red-100"
+                    : "border-gray-200"
+                }`}
+              />
+              {errors.contactPhone && (
+                <p className="mt-1 text-xs text-red-500">{errors.contactPhone}</p>
+              )}
+            </div>
+          </div>
 
               {/* 提交按钮 */}
               <div className="mt-8 space-y-3">
