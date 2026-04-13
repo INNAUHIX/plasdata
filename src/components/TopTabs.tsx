@@ -4,7 +4,7 @@ const tabs = [
   { key: "property", label: "物性参数" },
   { key: "replace", label: "替代材料" },
   { key: "charts", label: "图表曲线" },
-  { key: "materials", label: "相关资料" }
+  { key: "materials", label: "选材资料" }
 ] as const;
 
 export type TabKey = (typeof tabs)[number]["key"];

@@ -1,4 +1,4 @@
-﻿﻿"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import DesignDocPanel from "@/components/DesignDocPanel";
@@ -464,8 +464,8 @@ export default function Page() {
             <section ref={materialsRef} id="materials">
               <SectionCard className="rounded-xl border-[#e5ebf3]">
                 <div className="mb-5 flex items-center justify-between">
-                  <h3 className="text-[18px] font-bold text-[#202938]">相关资料</h3>
-                  <span className="text-[14px] text-[#98a2b3]">更多相关资料 &gt;</span>
+                  <h3 className="text-[18px] font-bold text-[#202938]">选材资料</h3>
+                  <span className="text-[14px] text-[#98a2b3]">更多选材资料 &gt;</span>
                 </div>
                 <div className="mb-5 flex flex-wrap gap-2">
                   {["推荐", "成功案例", "品牌案例", "选材资料", "加工指南"].map((tab) => (
