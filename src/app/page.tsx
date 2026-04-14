@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import DesignDocPanel from "@/components/DesignDocPanel";
@@ -10,6 +10,7 @@ import InfoGrid from "@/components/InfoGrid";
 import DataTable from "@/components/DataTable";
 import ChemicalTable, { ChemicalRow } from "@/components/ChemicalTable";
 import CertificateDownloadModal from "@/components/CertificateDownloadModal";
+import Toast from "@/components/Toast";
 
 const PANEL_WIDTH = 520;
 const paramTabs = ["性能参数", "加工参数", "黄卡参数", "耐化参数"];
@@ -143,16 +144,16 @@ const chemicalRows: ChemicalRow[] = [
 ];
 
 const replaceRows = [
-  ["SO.F.TER./Pibiter® N200 NAT001", "更高冲击强度", "加入对比", "收藏"],
-  ["SO.F.TER./Pibiter® N100 NAT001", "更高耐热性", "加入对比", "收藏"],
-  ["巴斯夫/Ultradur® B 4520 FC Aqua PBT", "阻燃性能较好", "加入对比", "收藏"],
-  ["巴斯夫/Ultradur® B 4520 PBT", "各项性能最接近", "加入对比", "收藏"],
-  ["巴斯夫 Ultradur® B 4520 BKO0110 PBT", "各项性能最接近", "加入对比", "收藏"],
-  ["巴斯夫 Ultradur® B 4406 GG Q717 PBT", "更高耐热性", "加入对比", "收藏"],
-  ["巴斯夫 Ultradur® S 4090 G6 LS BK15077 PBT/ASA", "更高冲击强度", "加入对比", "收藏"],
-  ["塞拉尼斯 Crastin® FG6134 NC010 PBT", "更高冲击强度", "加入对比", "收藏"],
-  ["赢创 VESTODUR® 2000 PBT", "更高冲击强度", "加入对比", "收藏"],
-  ["ESTOPLAST EP 1500GY165 PBT", "更高冲击强度", "加入对比", "收藏"]
+  ["巴斯夫/Ultradur® B 4520 PBT", "98%", "加入对比", "收藏", "¥30500元/吨"],
+  ["巴斯夫 Ultradur® B 4520 BKO0110 PBT", "97%", "加入对比", "收藏", "¥31800元/吨"],
+  ["巴斯夫/Ultradur® B 4520 FC Aqua PBT", "95%", "加入对比", "收藏", "¥32200元/吨"],
+  ["赢创 VESTODUR® 2000 PBT", "94%", "加入对比", "收藏", "¥34500元/吨"],
+  ["塞拉尼斯 Crastin® FG6134 NC010 PBT", "93%", "加入对比", "收藏", "¥31200元/吨"],
+  ["SO.F.TER./Pibiter® N200 NAT001", "92%", "加入对比", "收藏", "¥28500元/吨"],
+  ["巴斯夫 Ultradur® S 4090 G6 LS BK15077 PBT/ASA", "91%", "加入对比", "收藏", "¥33600元/吨"],
+  ["SO.F.TER./Pibiter® N100 NAT001", "90%", "加入对比", "收藏", "¥26800元/吨"],
+  ["巴斯夫 Ultradur® B 4406 GG Q717 PBT", "89%", "加入对比", "收藏", "¥29300元/吨"],
+  ["ESTOPLAST EP 1500GY165 PBT", "88%", "加入对比", "收藏", "¥27900元/吨"]
 ];
 
 const chartCards = [
@@ -179,6 +180,9 @@ export default function Page() {
   const [chemicalGrade, setChemicalGrade] = useState("全部");
   const [activeTab, setActiveTab] = useState<TabKey>("material");
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [comparedRows, setComparedRows] = useState<Set<number>>(new Set());
+  const [favoriteRows, setFavoriteRows] = useState<Set<number>>(new Set());
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
 
   const materialRef = useRef<HTMLElement | null>(null);
   const certRef = useRef<HTMLElement | null>(null);
@@ -306,6 +310,39 @@ export default function Page() {
     setFavoriteCerts((prev) =>
       prev.includes(activeCert.name) ? prev.filter((item) => item !== activeCert.name) : [...prev, activeCert.name]
     );
+  };
+
+  const showToast = (message: string, type: 'success' | 'info' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleCompareToggle = (rowIndex: number) => {
+    setComparedRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(rowIndex)) {
+        newSet.delete(rowIndex);
+        showToast('已取消对比');
+      } else {
+        newSet.add(rowIndex);
+        showToast('已加入对比');
+      }
+      return newSet;
+    });
+  };
+
+  const handleFavoriteToggle = (rowIndex: number) => {
+    setFavoriteRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(rowIndex)) {
+        newSet.delete(rowIndex);
+        showToast('已取消收藏');
+      } else {
+        newSet.add(rowIndex);
+        showToast('已收藏');
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -439,7 +476,14 @@ export default function Page() {
             <section ref={replaceRef} id="replace">
               <SectionCard className="rounded-lg border-[#e5ebf3]">
                 <h3 className="mb-5 text-[18px] font-bold text-[#202938]">替代材料推荐</h3>
-                <DataTable headers={["替代型号", "推荐原因", "操作"]} rows={replaceRows.map((row) => [row[0], row[1], `${row[2]} ${row[3]}`])} />
+                <DataTable 
+                  headers={["替代型号", "相似度", "预估价格（含税）", "操作"]} 
+                  rows={replaceRows.map((row) => [row[0], row[1], row[4], ""])} 
+                  onCompareToggle={handleCompareToggle}
+                  onFavoriteToggle={handleFavoriteToggle}
+                  comparedRows={comparedRows}
+                  favoriteRows={favoriteRows}
+                />
               </SectionCard>
             </section>
 
@@ -534,6 +578,14 @@ export default function Page() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
           </svg>
         </button>
+      )}
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
       )}
     </>
   );

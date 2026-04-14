@@ -19,7 +19,7 @@ type TrendOption = {
 const trendOptions: TrendOption[] = [
   {
     id: "21092",
-    name: "21092",
+    name: "2004-2T-21092",
     current: 2735,
     delta: -49.81,
     pct: 1.79,
@@ -34,7 +34,7 @@ const trendOptions: TrendOption[] = [
   },
   {
     id: "21093",
-    name: "21093",
+    name: "2004-2T-21093",
     current: 2580,
     delta: -36.2,
     pct: 1.38,
@@ -182,7 +182,7 @@ export default function RightRail() {
           <select
             value={selectedId}
             onChange={(event) => setSelectedId(event.target.value)}
-            className="w-full appearance-none rounded-xl border border-[#dbe3ef] bg-white px-5 py-3 text-[14px] font-medium text-[#3f4c5d] outline-none transition focus:border-[#f65201]"
+            className="w-full appearance-none rounded-xl border border-[#e5ebf3] bg-white px-5 py-3 text-[14px] font-medium text-[#3f4c5d] shadow-sm outline-none transition focus:border-[#f65201] focus:shadow-[0_0_0_3px_rgba(246,82,1,0.1)]"
           >
             {trendOptions.map((option) => (
               <option key={option.id} value={option.id}>
@@ -190,7 +190,7 @@ export default function RightRail() {
               </option>
             ))}
           </select>
-          <span className="pointer-events-none absolute right-5 top-1/2 h-0 w-0 -translate-y-1/2 border-l-[6px] border-r-[6px] border-t-[7px] border-l-transparent border-r-transparent border-t-[#7f8898]" />
+          <span className="pointer-events-none absolute right-5 top-1/2 h-0 w-0 -translate-y-1/2 border-l-[6px] border-r-[6px] border-t-[7px] border-l-transparent border-r-transparent border-t-[#98a2b3]" />
         </div>
 
         <div className="mt-4 flex items-start justify-between">
