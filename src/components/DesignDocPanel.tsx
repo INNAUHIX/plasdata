@@ -32,12 +32,18 @@ function renderMarkdown(content: string) {
     const bodyRows = tableRows.filter((row) => !row.every((cell) => /^-+$/.test(cell)));
     if (bodyRows.length >= 2) {
       elements.push(
-        <div key={`table-${elements.length}`} className="mb-5 overflow-hidden rounded-xl border border-line shadow-soft">
-          <table className="w-full border-collapse bg-white text-left text-sm">
+        <div key={`table-${elements.length}`} className="mb-5 overflow-x-auto rounded-xl border border-line shadow-soft">
+          <table className="w-full min-w-[600px] border-collapse bg-white text-left text-sm">
             <thead className="bg-slate-50 text-slate-500">
               <tr>
-                {bodyRows[0].map((cell) => (
-                  <th key={cell} className="border-b border-line px-4 py-3 font-semibold">
+                {bodyRows[0].map((cell, index) => (
+                  <th 
+                    key={cell} 
+                    className="border-b border-line px-4 py-3 font-semibold"
+                    style={{
+                      width: index === 0 ? '150px' : index === 1 ? '200px' : 'auto'
+                    }}
+                  >
                     {cell}
                   </th>
                 ))}
@@ -47,7 +53,13 @@ function renderMarkdown(content: string) {
               {bodyRows.slice(1).map((row, rowIndex) => (
                 <tr key={`row-${rowIndex}`} className="text-slate-600">
                   {row.map((cell, cellIndex) => (
-                    <td key={`${cell}-${cellIndex}`} className="border-t border-line px-4 py-3 align-top">
+                    <td 
+                      key={`${cell}-${cellIndex}`} 
+                      className="border-t border-line px-4 py-3 align-top"
+                      style={{
+                        width: cellIndex === 0 ? '150px' : cellIndex === 1 ? '200px' : 'auto'
+                      }}
+                    >
                       {cell}
                     </td>
                   ))}
