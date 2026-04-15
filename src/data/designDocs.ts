@@ -17,7 +17,6 @@ export const designDocs: DesignDoc[] = [
 | 事件名称 | 触发时机 | 数据字段 |
 |----------|----------|----------|
 | 页面加载 | 页面完全加载完成 | page_name: 材料详情页<br>material_id: 材料ID<br>material_name: 材料名称<br>referrer: 来源页面<br>user_type: 用户类型 |
-| 页面离开 | 用户离开页面 | page_name: 材料详情页<br>material_id: 材料ID<br>stay_duration: 停留时间(秒) |
 | 返回顶部 | 点击返回顶部按钮 | material_id: 材料ID |
 
 ## 2. 导航模块埋点
